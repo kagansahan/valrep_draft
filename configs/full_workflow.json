@@ -1,0 +1,59 @@
+{
+  // Physics topology name (used in output file naming)
+  "topology": "SS_direct",
+
+  // Beam or center-of-mass energy
+  "energy": 13.0,
+
+  // Parameter space scan definitions
+  "parameter_space": {
+    "MSQUARK": {
+      "min": 100,   // Optional: lower scan bound
+      "max": 500,   // Optional: upper scan bound
+      "step": 100,  // Optional: scan step size
+      "value": 400  // Actual value used in this run
+    },
+    "MLSP": {
+      "value": 100  // Lightest SUSY particle mass
+    }
+  },
+
+  // Workflow steps executed in order
+  "steps": ["slha", "madgraph", "delphes_hepmc", "cutlang"],
+
+  // SLHA card generation step
+  "slha": {
+    "slha_template": "/path/to/param_card.SS.direct.dat"  // Template SLHA card
+  },
+
+  // MadGraph event generation settings
+  "madgraph": {
+    "skip_if_done": true,  // Skip step if output already exists
+    "proc_card": "/home/kagan/peace-dev/myproject/Cards/proc_card.SS.direct.dat", // MG process card
+    "run_name": "run_01",  // Run directory name inside Events/
+
+    // Run card settings passed to Madevent
+    "run_settings": {
+      "nevents": 100,  // Number of events to generate
+      "ebeam1": 6500,  // Beam 1 energy
+      "ebeam2": 6500,  // Beam 2 energy
+      "pdlabel": "nn23lo1",  // PDF set
+      "ptlund": -2,    // Lund pT parameter
+      "ickkw": 1,      // MLM matching mode
+      "xqcut": "MSQUARK/4"  // Matching scale, evaluated dynamically
+    }
+  },
+
+  // Delphes fast simulation settings
+  "delphes": {
+    "skip_if_done": true,  // Skip if ROOT output already exists
+    "card_path": "/path/to/delphes_card_ATLAS.tcl" // Delphes detector card
+  },
+
+  // CutLang analysis settings
+  "cutlang": {
+    "skip_if_done": false,  // Force analysis to run
+    "adl_file": "/path/to/SS_direct.adl", // ADL analysis description
+    "root_type": "DELPHES"  // Input ROOT format (matches Delphes output)
+  }
+}

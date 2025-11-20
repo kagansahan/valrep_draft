@@ -1,0 +1,45 @@
+steps:
+  - slha
+  - madgraph
+  - delphes_hepmc
+  - cutlang
+
+topology: SS_direct        # Name of the physics topology
+energy: 13.0               # Collision energy in TeV
+
+parameter_space:
+  MSQUARK:
+    # Example for scanning:
+    # min: 100
+    # max: 500
+    # step: 100
+    value: 400             # Fixed parameter value
+  MLSP:
+    value: 100             # Fixed parameter value
+
+slha:
+  slha_template: /path/to/param_card.SS.direct.dat   # Template SLHA card
+
+madgraph:
+  skip_if_done: true
+  proc_card: /path/to/proc_card.SS.direct.dat         # MG5 process card
+  run_name: run_01                                    # MG5 run tag
+  run_settings:                                        # MadGraph run card settings
+    nevents: 100
+    ebeam1: 6500
+    ebeam2: 6500
+    pdlabel: nn23lo1
+    ptlund: -2
+    ickkw: 1
+    xqcut: "MSQUARK/4"          # Formula evaluated using parameter_space
+  pythia8_settings:             # Settings passed to Pythia8
+    jetmatching:njetmax: 2
+
+delphes:
+  skip_if_done: true
+  card_path: /path/to/delphes_card_ATLAS.tcl          # Delphes detector card
+
+cutlang:
+  skip_if_done: true
+  adl_file: /path/to/SS_direct.adl                    # Analysis definition file
+  root_type: DELPHES                                  # Input ROOT format
